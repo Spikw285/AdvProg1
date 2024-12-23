@@ -1,95 +1,85 @@
 package main
 
 import (
+	"Assignment1/Bank"
+	"Assignment1/Employees"
 	"Assignment1/Library"
-	"bufio"
+	"Assignment1/Shapes"
 	"fmt"
-	"os"
-	"regexp"
-	"strings"
 )
 
 func main() {
-	lib := Library.NewLibrary()
-	scanner := bufio.NewScanner(os.Stdin)
-
-	idPattern := regexp.MustCompile(`^\d+$`)
-	wordPattern := regexp.MustCompile(`^[a-zA-Z]+$`)
-
-	for {
-		fmt.Println("\nMenu:")
-		fmt.Println("1. Add - Add the book")
-		fmt.Println("2. Borrow - Borrow the book")
-		fmt.Println("3. Return - Return the book")
-		fmt.Println("4. List - Show all books")
-		fmt.Println("5. Exit - Exit program")
-
-		fmt.Print("Choose action: ")
-		scanner.Scan()
-		command := strings.ToLower(strings.TrimSpace(scanner.Text()))
-
-		switch command {
-		case "1", "add":
-			fmt.Print("Enter book ID (only digits): ")
-			scanner.Scan()
-			id := strings.TrimSpace(scanner.Text())
-			if !idPattern.MatchString(id) {
-				fmt.Println("Error: Book ID must contain only digits.")
-				continue
-			}
-
-			fmt.Print("Enter book title (at least 4 characters or 1 word): ")
-			scanner.Scan()
-			title := strings.TrimSpace(scanner.Text())
-			if len(title) < 4 && !strings.Contains(title, " ") {
-				fmt.Println("Error: Book title must be at least 4 characters or contain 1 word.")
-				continue
-			}
-
-			fmt.Print("Enter book author (at least 3 characters): ")
-			scanner.Scan()
-			author := strings.TrimSpace(scanner.Text())
-			if len(author) < 3 || !wordPattern.MatchString(author) {
-				fmt.Println("Error: Author's name must be at least 3 characters.")
-				continue
-			}
-
-			book := Library.Book{
-				ID:     id,
-				Title:  title,
-				Author: author,
-			}
-			lib.AddBook(book)
-
-		case "2", "borrow":
-			fmt.Print("Enter book ID for borrowing: ")
-			scanner.Scan()
-			id := strings.TrimSpace(scanner.Text())
-			if !idPattern.MatchString(id) {
-				fmt.Println("Error: Book ID must contain only digits.")
-				continue
-			}
-			lib.BorrowBook(id)
-
-		case "3", "return":
-			fmt.Print("Enter book ID for returning: ")
-			scanner.Scan()
-			id := strings.TrimSpace(scanner.Text())
-			if !idPattern.MatchString(id) {
-				fmt.Println("Error: Book ID must contain only digits.")
-				continue
-			}
-			lib.ReturnBook(id)
-
-		case "4", "list":
-			lib.ListBooks()
-
-		case "5", "exit":
-			fmt.Println("Exiting program...")
-			return
-
-		default:
-			fmt.Println("Unknown command. Please choose a valid option from the menu.")
-		}
+	// Bank example
+	bankAccount := &Bank.BankAccount{
+		AccountNumber: "123456789",
+		HolderName:    "John Doe",
+		Balance:       1000.00,
 	}
+
+	// Performing bank transactions
+	transactions := []float64{500, -200, 1000}
+	Bank.Transaction(bankAccount, transactions)
+	bankAccount.GetBalance()
+
+	// Employees example
+	fullTimeEmployee := Employees.FullTimeEmployee{
+		ID:     1,
+		Name:   "Alice",
+		Salary: 50000,
+	}
+
+	partTimeEmployee := Employees.PartTimeEmployee{
+		ID:          2,
+		Name:        "Bob",
+		HourlyRate:  20,
+		HoursWorked: 15,
+	}
+
+	company := Employees.Company{
+		Employees: make(map[string]Employees.Employee),
+	}
+
+	company.AddEmployee(fullTimeEmployee)
+	company.AddEmployee(partTimeEmployee)
+
+	// Listing all employees
+	company.ListEmployees()
+
+	// Library example
+	library := Library.NewLibrary()
+
+	book1 := Library.Book{
+		ID:         "1",
+		Title:      "The Go Programming Language",
+		Author:     "Alan Donovan",
+		IsBorrowed: false,
+	}
+
+	book2 := Library.Book{
+		ID:         "2",
+		Title:      "Clean Code",
+		Author:     "Robert C. Martin",
+		IsBorrowed: false,
+	}
+
+	library.AddBook(book1)
+	library.AddBook(book2)
+
+	// Borrow and return books
+	library.BorrowBook("1")
+	library.ListBooks()
+	library.ReturnBook("1")
+	library.ListBooks()
+
+	// Shapes example
+	rectangle := Shapes.Rectangle{Length: 5, Width: 3}
+	circle := Shapes.Circle{Radius: 7}
+	square := Shapes.Square{Length: 4}
+	triangle := Shapes.Triangle{SideA: 3, SideB: 4, SideC: 5}
+
+	// Displaying area and perimeter for shapes
+	fmt.Printf("Rectangle - Area: %.2f, Perimeter: %.2f\n", rectangle.Area(), rectangle.Perimeter())
+	fmt.Printf("Circle - Area: %.2f, Perimeter: %.2f\n", circle.Area(), circle.Perimeter())
+	fmt.Printf("Square - Area: %.2f, Perimeter: %.2f\n", square.Area(), square.Perimeter())
+	fmt.Printf("Triangle - Area: %.2f, Perimeter: %.2f\n", triangle.Area(), triangle.Perimeter())
 }
